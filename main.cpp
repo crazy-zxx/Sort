@@ -158,8 +158,8 @@ void ShellSort(SqList &L, int delta[], int len) {
 int menu() {
     int select = 0;
     printf("***************************************\n");
-    printf("1.自动输入数据\n");
-    printf("2.手动生成数据\n");
+    printf("1.自动生成数据\n");
+    printf("2.手动输入数据\n");
     printf("0.退出\n");
     printf("***************************************\n");
     printf("输入所需操作编号：");
