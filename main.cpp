@@ -198,11 +198,11 @@ int Partition(SqList &L, int low, int high) {
 
     //可以改进随机值位置为枢纽可以相对避免左右一长一短的极端情况
     //但是要保证两端向中间交替扫描，需要通过交换 该随机位置 与 最左端位置 的数据实现
-    srand(time(NULL));
-    int pos = (rand() % (high - low +1)) + low;  //[low,high]中的任意值
-    RedType temp=L.r[pos];
-    L.r[pos]=L.r[low];
-    L.r[low]=temp;
+//    srand(time(NULL));
+//    int pos = (rand() % (high - low +1)) + low;  //[low,high]中的任意值
+//    RedType temp=L.r[pos];
+//    L.r[pos]=L.r[low];
+//    L.r[low]=temp;
 
     //以最左值为枢纽
     L.r[0] = L.r[low];
@@ -246,10 +246,11 @@ int menu() {
     printf("***************************************\n");
     printf("1.自动生成数据\n");
     printf("2.手动输入数据\n");
-    printf("0.退出\n");
-    printf("***************************************\n");
-    printf("输入所需操作编号：");
-    scanf("%d", &select);
+    printf("0.退出！\n");
+    do {
+        printf("输入所需操作编号(0-2)：");
+        scanf("%d", &select);
+    }while (select<0 || select>2);
     switch (select) {
         case 0:
             return 0;
@@ -271,12 +272,15 @@ int menu() {
     printf("7.排序\n");
     printf("8.排序\n");
     printf("0.退出\n");
-    printf("***************************************\n");
-    printf("输入所需操作编号：");
-    scanf("%d", &select);
+    do {
+        printf("输入所需操作编号(0-8)：");
+        scanf("%d", &select);
+    }while (select<0 || select>8);
+
     printf("***************************************\n");
     printf("原数列：");
     printSqList(L);
+
     switch (select) {
         case 0:
             return 0;
