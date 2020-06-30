@@ -204,7 +204,6 @@ int Partition(SqList &L, int low, int high) {
     L.r[pos]=L.r[low];
     L.r[low]=temp;
 
-
     //以最左值为枢纽
     L.r[0] = L.r[low];
     int key = L.r[low].key;
