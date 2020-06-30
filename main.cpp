@@ -57,6 +57,7 @@ void printSqList(SqList L) {
     printf("\n");
 }
 
+
 //直接插入排序
 void InsertSort(SqList &L) {
 
@@ -110,7 +111,7 @@ void initDelta(SqList L, int delta[], int &len) {
 
     len = 0;
     delta[len] = L.length / 2;
-    while (len++,delta[len-1]!=0 && delta[len-1]!=1){
+    while (len++, delta[len - 1] != 0 && delta[len - 1] != 1) {
         delta[len] = delta[len - 1] / 2;
     }
 
@@ -152,6 +153,91 @@ void ShellSort(SqList &L, int delta[], int len) {
 
 }
 
+//冒泡排序
+void BubbleSort(SqList &L) {
+
+    for (int i = 1; i < L.length; ++i) {            // length-1 趟冒泡
+        for (int j = 1; j <= L.length - i; ++j) {   // 每次从[1,L.length-1]依次两两比较找出最大的，放在右边
+            if (L.r[j].key > L.r[j + 1].key) {      //前大后小，交换
+                RedType temp = L.r[j];
+                L.r[j] = L.r[j + 1];
+                L.r[j + 1] = temp;
+            }
+        }
+        //打印每趟结果
+        printSqList(L);
+    }
+}
+
+//改进冒泡排序
+void BubbleSortPro(SqList &L) {
+
+    for (int i = 1; i < L.length; ++i) {
+
+        int exchange = 0;     //交换标志，每趟初始默认有序无需交换
+
+        for (int j = 1; j <= L.length - i; ++j) {
+            if (L.r[j].key > L.r[j + 1].key) {
+                RedType temp = L.r[j];
+                L.r[j] = L.r[j + 1];
+                L.r[j + 1] = temp;
+                exchange = 1;       //发生交换，修改标志
+            }
+        }
+        if (!exchange) {      //如果当前一趟没有发生交换，说明已经有序
+            break;
+        }
+        //打印每趟结果
+        printSqList(L);
+    }
+
+}
+
+//快速排序一次划分
+int Partition(SqList &L, int low, int high) {
+
+    //可以改进随机值位置为枢纽可以相对避免左右一长一短的极端情况
+    //但是要保证两端向中间交替扫描，需要通过交换 该随机位置 与 最左端位置 的数据实现
+    srand(time(NULL));
+    int pos = (rand() % (high - low +1)) + low;  //[low,high]中的任意值
+    RedType temp=L.r[pos];
+    L.r[pos]=L.r[low];
+    L.r[low]=temp;
+
+    //以最左值为枢纽
+    L.r[0] = L.r[low];
+    int key = L.r[low].key;
+
+    while (low < high) {        //两端向中间交替扫描
+        while (low < high && L.r[high].key > key) high--;   //先从右向左，找小于枢纽的交换
+        L.r[low] = L.r[high];
+        while (low < high && L.r[low].key < key) low++;     //再从左向右，找大于枢纽的交换
+        L.r[high] = L.r[low];
+    }
+    L.r[low] = L.r[0];      //将枢纽值插入中间，最终形成左小右大序列
+
+    return low;     //返回枢纽位置
+}
+
+//快速排序
+void QSort(SqList &L, int low, int high) {
+    if (low < high) {
+        int keyPos = Partition(L, low, high);    //划分，获取枢纽位置
+
+        //打印每趟结果
+        printSqList(L);
+
+        QSort(L, low, keyPos - 1);          //对左子表递归排序
+        QSort(L, keyPos + 1, high);          //对右子表递归排序
+
+    }
+}
+
+//快速排序
+void QuickSort(SqList &L) {
+    QSort(L, 1, L.length);
+}
+
 //TODO
 
 
@@ -179,9 +265,9 @@ int menu() {
     printf("1.直接插入排序\n");
     printf("2.折半插入排序\n");
     printf("3.希尔排序\n");
-    printf("4.排序\n");
-    printf("5.排序\n");
-    printf("6.排序\n");
+    printf("4.冒泡排序\n");
+    printf("5.改进冒泡排序\n");
+    printf("6.快速排序\n");
     printf("7.排序\n");
     printf("8.排序\n");
     printf("0.退出\n");
@@ -207,10 +293,13 @@ int menu() {
             ShellSort(L, delta, len);
             break;
         case 4:
+            BubbleSort(L);
             break;
         case 5:
+            BubbleSortPro(L);
             break;
         case 6:
+            QuickSort(L);
             break;
         case 7:
             break;
