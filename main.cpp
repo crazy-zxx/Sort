@@ -233,12 +233,83 @@ void QSort(SqList &L, int low, int high) {
     }
 }
 
-//快速排序
+//调用快速排序
 void QuickSort(SqList &L) {
     QSort(L, 1, L.length);
 }
 
-//TODO
+//简单选择排序
+void SelectSort(SqList &L) {
+
+    for (int i = 1; i < L.length; ++i) {
+        L.r[0] = L.r[i];        //保存 i 值，以备用于交换 i 与 min 处值
+        int min = i;            //记录最小值下标，默认 i 处值最小
+
+        for (int j = i + 1; j <= L.length; ++j) {   //从[i,L.length]区间
+            if (L.r[j].key < L.r[min].key) {        //找出最小值下标
+                min = j;
+            }
+        }
+        if (min != i) {             //找到比 i 处更小的值，交换位置，将该值值交换到 i 处
+            L.r[i] = L.r[min];
+            L.r[min] = L.r[0];
+        }
+
+        //打印每趟结果
+        printSqList(L);
+    }
+}
+
+//调整为大顶堆
+void HeapAdjustBigger(SqList &L, int s, int m) {
+
+    RedType temp = L.r[s];      //备份当前堆顶元素，以备交换
+
+    for (int i = 2 * s; i <= m; i *= 2) {           //比较s的左(i)右(i+1)孩子大小
+        if (i < m && L.r[i].key < L.r[i + 1].key) { //取二孩子中最大值，若无右孩子，默认左孩子是孩子中的最大值
+            i++;
+        }
+        if (temp.key >= L.r[i].key) {               //比较s与其孩子中的最大值，若s大，结束比较（由于是从下往上调整，若根大于孩子，那么其所有孩子已经比其更小，无须再向下找）
+            break;
+        }
+        L.r[s] = L.r[i];            //否则，s取其孩子最大值
+        s = i;                      //继续深入下一层，比较s孩子的孩子，寻找最大值
+    }
+
+    L.r[s] = temp;      //将最大值插入为堆顶
+}
+
+//堆排序(大顶堆)
+void HeapSort(SqList &L) {
+    for (int i = L.length / 2; i > 0; --i) {      //调整为大顶堆，从N/2开始，调整其与左右孩子
+        HeapAdjustBigger(L, i, L.length);
+
+        //打印每趟结果
+        printSqList(L);
+    }
+    for (int i = 1; i < L.length; ++i) {        //取出堆顶元素，将[1,L.length-i]重新调整为大顶堆
+        RedType temp = L.r[1];                  //将堆顶与最后一个交换，使不再参与调整
+        L.r[1] = L.r[L.length - i + 1];
+        L.r[L.length - i + 1] = temp;
+
+        HeapAdjustBigger(L, 1, L.length - i);
+
+        //打印每趟结果
+        printSqList(L);
+    }
+}
+
+//归并两个有序序列为一个有序序列
+
+//二路归并
+
+//调用二路归并
+
+
+
+//基数排序
+
+
 
 
 int menu() {
@@ -250,7 +321,7 @@ int menu() {
     do {
         printf("输入所需操作编号(0-2)：");
         scanf("%d", &select);
-    }while (select<0 || select>2);
+    } while (select < 0 || select > 2);
     switch (select) {
         case 0:
             return 0;
@@ -269,13 +340,13 @@ int menu() {
     printf("4.冒泡排序\n");
     printf("5.改进冒泡排序\n");
     printf("6.快速排序\n");
-    printf("7.排序\n");
-    printf("8.排序\n");
+    printf("7.简单选择排序\n");
+    printf("8.堆排序\n");
     printf("0.退出\n");
     do {
         printf("输入所需操作编号(0-8)：");
         scanf("%d", &select);
-    }while (select<0 || select>8);
+    } while (select < 0 || select > 8);
 
     printf("***************************************\n");
     printf("原数列：");
@@ -306,8 +377,10 @@ int menu() {
             QuickSort(L);
             break;
         case 7:
+            SelectSort(L);
             break;
         case 8:
+            HeapSort(L);
             break;
     }
 
