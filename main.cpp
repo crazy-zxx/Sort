@@ -299,17 +299,46 @@ void HeapSort(SqList &L) {
     }
 }
 
-//归并两个有序序列为一个有序序列
+//归并两个有序序列为一个有序序列:SR[i..m,m+1..n] ==> TR[i,n]
+void Merge(RedType SR[], RedType TR[], int i, int m, int n) {
+    int j, k;
+    for (j = m + 1, k = i; i <= m && j <= n; ++k) { //升序归并两部分，两者取小作为当前需要插入值
+        if (SR[i].key <= SR[j].key) {
+            TR[k] = SR[i++];
+        } else {
+            TR[k] = SR[j++];
+        }
+    }
+    while (i <= m) {            //如左半部分有剩余，追加到TR之后
+        TR[k++] = SR[i++];
+    }
+    while (j <= n) {            //如右半部分有剩余，追加到TR之后
+        TR[k++] = SR[j++];
+    }
+}
 
-//二路归并
+//二路归并(递归):SR[s..t] ==> TR1[s..t]
+void MSort(RedType SR[], RedType TR[], int s, int t) {
+
+    RedType temp[MAXSIZE];    //临时数组，用于暂存归并序列
+
+    if (s == t) {       //只有一个元素，不需归并
+        TR[s] = SR[s];
+    } else {
+        int m = (s + t) / 2;                 //从中间划分
+        MSort(SR, temp, s, m);              //递归归并左半部分
+        MSort(SR, temp, m + 1, t);       //递归归并右半部分
+
+        Merge(temp, TR, s, m, t);          //将两半部分归并到一起
+    }
+}
 
 //调用二路归并
-
-
-
-//基数排序
-
-
+void MergeSort(SqList &L) {
+    MSort(L.r, L.r, 1, L.length);
+    //打印结果
+    printSqList(L);
+}
 
 
 int menu() {
@@ -342,11 +371,12 @@ int menu() {
     printf("6.快速排序\n");
     printf("7.简单选择排序\n");
     printf("8.堆排序\n");
+    printf("9.二路归并排序\n");
     printf("0.退出\n");
     do {
         printf("输入所需操作编号(0-8)：");
         scanf("%d", &select);
-    } while (select < 0 || select > 8);
+    } while (select < 0 || select > 9);
 
     printf("***************************************\n");
     printf("原数列：");
@@ -381,6 +411,9 @@ int menu() {
             break;
         case 8:
             HeapSort(L);
+            break;
+        case 9:
+            MergeSort(L);
             break;
     }
 
