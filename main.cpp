@@ -422,9 +422,6 @@ int menu() {
 
 int main() {
 
-    if ('s') {
-
-    }
     while (menu()) {}
 
     return 0;
