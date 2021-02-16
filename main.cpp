@@ -132,8 +132,7 @@ void ShellInsert(SqList &L, int dk) {
     for (i = dk + 1; i <= L.length; ++i) {      //跨过一个当前增量长度，从 dk+1 开始，间隔当前增量向前比较
         if (L.r[i].key < L.r[i - dk].key) {     //当前 i 小于间隔增量dk 的前一个 i-dk，需要前插
             L.r[0] = L.r[i];
-            for (j = i - dk;
-                 j > 0 && L.r[0].key < L.r[j].key; j -= dk) {   //继续向前比较，每次间隔增量dk(此处为了代码简洁，重复比较了一次上边的 i 和 i-dk)
+            for (j = i - dk;j > 0 && L.r[0].key < L.r[j].key; j -= dk) {   //继续向前比较，每次间隔增量dk(此处为了代码简洁，重复比较了一次上边的 i 和 i-dk)
                 L.r[j + dk] = L.r[j];           //比插入值 大的 统统间隔增量dk 右移
             }
             L.r[j + dk] = L.r[0];               //在 j+dk 处插入
